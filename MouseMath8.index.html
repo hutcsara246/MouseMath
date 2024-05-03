@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouse Math Disney Advance Reservations Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+            color: #0088cc;
+        }
+        #tutorial {
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #park, #travelDate, button {
+            margin: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #0088cc;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005580;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Mouse Math Disney Advance Reservations Calculator</h1>
+
+    <div id="tutorial">
+        <h2>How to Use:</h2>
+        <ol>
+            <li>Select your Disney park location from the dropdown menu.</li>
+            <li>Choose your travel date using the date picker.</li>
+            <li>Click the "Calculate" button to see when you can book your Disney hotel and dining reservations.</li>
+        </ol>
+    </div>
+
+    <label for="park">Select Disney Park Location:</label>
+    <select id="park">
+        <option value="Walt Disney World, Florida">Walt Disney World, Florida</option>
+        <option value="Disneyland Resort, California">Disneyland Resort, California</option>
+        <option value="Tokyo Disney Resort, Japan">Tokyo Disney Resort, Japan</option>
+        <option value="Disneyland Paris, France">Disneyland Paris, France</option>
+        <option value="Hong Kong Disneyland Resort">Hong Kong Disneyland Resort</option>
+        <option value="Shanghai Disney Resort, China">Shanghai Disney Resort, China</option>
+    </select>
+    
+    <label for="travelDate">Select Date of Travel:</label>
+    <input type="date" id="travelDate">
+    
+    <button onclick="calculateBookingWindow()">Calculate</button>
+    
+    <div id="result"></div>
+
+    <script>
+        function calculateBookingWindow() {
+            var park = document.getElementById("park").value;
+            var travelDate = new Date(document.getElementById("travelDate").value);
+            var result = document.getElementById("result");
+
+            // Parse the data to determine the booking windows
+            var bookingWindow = getBookingWindow(park, travelDate);
+            var hotelBookingDate = new Date(travelDate);
+            hotelBookingDate.setDate(travelDate.getDate() - bookingWindow.hotel);
+            var diningBookingDate = new Date(travelDate);
+            diningBookingDate.setDate(travelDate.getDate() - bookingWindow.dining);
+            
+            result.innerHTML = "<h2>Booking Information:</h2>" +
+                               "<p>You can book your Disney hotel reservation " + bookingWindow.hotel + " days in advance, starting from: " + hotelBookingDate.toDateString() + " at " + bookingWindow.hotelTime + "</p>" +
+                               "<p>You can book your Disney dining reservation " + bookingWindow.dining + " days in advance, starting from: " + diningBookingDate.toDateString() + " at " + bookingWindow.diningTime + "</p>";
+        }
+
+        function getBookingWindow(park, travelDate) {
+            // Define the booking windows based on the PDF data
+            var data = {
+                "Walt Disney World, Florida": { hotel: 499, dining: 60, hotelTime: "6:00 AM EST", diningTime: "6:00 AM EST" },
+                "Disneyland Resort, California": { hotel: 499, dining: 60, hotelTime: "6:00 AM PST", diningTime: "6:00 AM PST" },
+                "Tokyo Disney Resort, Japan": { hotel: 180, dining: 180, hotelTime: "9:00 AM JST", diningTime: "10:00 AM JST" },
+                "Disneyland Paris, France": { hotel: 330, dining: 60, hotelTime: "9:00 AM CET", diningTime: "9:00 AM CET" },
+                "Hong Kong Disneyland Resort": { hotel: 365, dining: 180, hotelTime: "10:00 AM HKT", diningTime: "10:00 AM HKT" },
+                "Shanghai Disney Resort, China": { hotel: 180, dining: 180, hotelTime: "9:00 AM CST", diningTime: "9:00 AM CST" }
+            };
+
+            return data[park];
+        }
+    </script>
+</body>
+</html>
